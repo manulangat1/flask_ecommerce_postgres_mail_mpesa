@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>Flask ecommerce</title>
+</head>
+<body>
+    <section class="container p3 m-2">
+        <h3>see a list of all products</h3>
+        {% for product in products %}
+        <h1 color="green">{{product.name}} | {{product.price}}</h1>
+        <a href="{{ url_for('single',id=product.id) }}"  rel="noopener noreferrer">Se</a>
+        <p>{{product.desc}}</p>
+        {% endfor %}
+    </section>
+    <section class="container">
+        <h3>Add a products</h3>
+        <form action="/add" method="post">
+            <div class="form-group">
+                <label>Name</label>
+                <input type="text" name="name" id="" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>price</label>
+                <input type="number" name="price" id="" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>desc</label>
+                <input type="text" name="desc" id="" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary">Add</button>
+        </form>
+    </section>
+</body>
+</html>

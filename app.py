@@ -3,12 +3,14 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
 from flask_bcrypt import Bcrypt
+from flask_cors import CORS
 import os 
+# import .models
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
-
+CORS(app)
 ENV = 'prod'
 if ENV == 'dev':
     app.debug = True
@@ -23,7 +25,24 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 migrate = Migrate(app,db)
+bcrypt = Bcrypt(app)
+import datetime
+class User(db.Model):
+    __tablename__ = "users"
+    id = db.Column(db.Integer,primary_key=True,autoincrement=True)
+    email = db.Column(db.String(255), unique=True, nullable=False)
+    password = db.Column(db.String(255), nullable=False)
+    registered_on = db.Column(db.DateTime, nullable=False)
+    admin = db.Column(db.Boolean, nullable=False, default=False)
 
+    def __init__(self,email,password,admin=False):
+        self.email = email
+        self.password = bcrypt.generate_password_hash(
+            password
+            # ,app.config.get('BCRYPT_LOG_ROUNDS')
+        )
+        self.registered_on = datetime.datetime.now()
+        self.admin = admin
 class Products(db.Model):
     id = db.Column(db.Integer,primary_key=True)
     name = db.Column(db.String(200))
@@ -64,5 +83,6 @@ def single(id):
 
 if __name__ == "__main__":
     print(os.getenv("DATABASE_URL"))
+    
     app.run()
 
